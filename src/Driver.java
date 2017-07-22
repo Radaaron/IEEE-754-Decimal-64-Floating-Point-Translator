@@ -2,6 +2,7 @@
 public class Driver {
 
 	public static void main(String[] args) {
-		System.out.println("Hello World!");
+		Converter converter = new Converter();
+		System.out.println(converter.binaryToDecimal("100000101"));
 	}
 }
