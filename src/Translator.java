@@ -26,7 +26,7 @@ public class Translator {
 		if(in.length() == 16) {
 			in = converter.hexToBinary(in);
 		}
-		
+
 		// splits the input into IEEE decimal64 format partitions
 		if(in.charAt(0) == '1') {
 			sign = "-";
@@ -99,7 +99,6 @@ public class Translator {
 		// append to significand
 		mantissa = significand + mantissa;
 		// convert to decimal
-		System.out.println(mantissa);
 		mantissa = converter.packedBCDToDecimal(mantissa);
 	}
 }

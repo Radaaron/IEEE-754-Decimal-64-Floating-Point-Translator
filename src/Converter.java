@@ -49,139 +49,136 @@ public class Converter {
 		return temp;
 	}
 	
-	public String DPDToPackedBCD(String a) {
+	public String DPDToPackedBCD(String in) {
 		// a = [0123456789]
-		String ans = "abcdefghijkm"; // abcd efgh ijkm
-		// first, copy lsb of each nibble to ans
-		ans = ans.replace('d', a.charAt(2));
-		ans = ans.replace('h', a.charAt(5));
-		ans = ans.replace('m', a.charAt(9));
-		
-		// check the set bit for any major nibbles
-		if(a.charAt(6) == '1') {
-			// check if there are two or more major nibbles
-			if(a.charAt(7) == '1' && a.charAt(8) == '1') {
-				// two or more major nibbles, get location of minor nibble
-				switch(String.valueOf(a.charAt(3)) + String.valueOf(a.charAt(4))){
-				case "00":{
-					// minor nibble is first nibble
-					ans = ans.replace('a', '1');
-					ans = ans.replace('b', '0');
-					ans = ans.replace('c', '0');
-					ans = ans.replace('e', '1');
-					ans = ans.replace('f', '0');
-					ans = ans.replace('g', '0');
-					ans = ans.replace('i', '0');
-					ans = ans.replace('j', a.charAt(0));
-					ans = ans.replace('k', a.charAt(1));
-					return ans;
-					
-				}
-				case "01":{
-					// minor nibble is second nibble
-					ans = ans.replace('a', '1');
-					ans = ans.replace('b', '0');
-					ans = ans.replace('c', '0');
-					ans = ans.replace('e', '0');
-					ans = ans.replace('f', a.charAt(0));
-					ans = ans.replace('g', a.charAt(1));
-					ans = ans.replace('i', '1');
-					ans = ans.replace('j', '0');
-					ans = ans.replace('k', '0');
-					return ans;
-				}
-				case "10":{
-					// minor nibble is third nibble
-					ans = ans.replace('a', '0');
-					ans = ans.replace('b', a.charAt(0));
-					ans = ans.replace('c', a.charAt(1));
-					ans = ans.replace('e', '1');
-					ans = ans.replace('f', '0');
-					ans = ans.replace('g', '0');
-					ans = ans.replace('i', '1');
-					ans = ans.replace('j', '0');
-					ans = ans.replace('k', '0');
-					return ans;
-				}
-				case "11":{
-					// all major
-					ans = ans.replace('a', '1');
-					ans = ans.replace('b', '0');
-					ans = ans.replace('c', '0');
-					ans = ans.replace('e', '1');
-					ans = ans.replace('f', '0');
-					ans = ans.replace('g', '0');
-					ans = ans.replace('i', '1');
-					ans = ans.replace('j', '0');
-					ans = ans.replace('k', '0');
-					return ans;
-				}
-				default: {
-					System.out.println("TWO OR MORE MAJOR NIBBLE ERROR");
-					return null;
-				}
+		int offset = 0;
+		String ans = "", a, per10;
+		for(int i = 0; i < (in.length() / 10); i++) {
+			// partitions in string to 10 bits
+			a = "";
+			for(int j = offset; j < (offset + 10); j++) {
+				a = a + in.charAt(j);
+			}
+			
+			per10 = "abcdefghijkm"; // reset
+			// first, copy lsb of each nibble to ans
+			per10 = per10.replace('d', a.charAt(2));
+			per10 = per10.replace('h', a.charAt(5));
+			per10 = per10.replace('m', a.charAt(9));
+			
+			// check the set bit for any major nibbles
+			if(a.charAt(6) == '1') {
+				// check if there are two or more major nibbles
+				if(a.charAt(7) == '1' && a.charAt(8) == '1') {
+					// two or more major nibbles, get location of minor nibble
+					switch(String.valueOf(a.charAt(3)) + String.valueOf(a.charAt(4))){
+					case "00":{
+						// minor nibble is first nibble
+						per10 = per10.replace('a', '1');
+						per10 = per10.replace('b', '0');
+						per10 = per10.replace('c', '0');
+						per10 = per10.replace('e', '1');
+						per10 = per10.replace('f', '0');
+						per10 = per10.replace('g', '0');
+						per10 = per10.replace('i', '0');
+						per10 = per10.replace('j', a.charAt(0));
+						per10 = per10.replace('k', a.charAt(1));
+						
+					}
+					case "01":{
+						// minor nibble is second nibble
+						per10 = per10.replace('a', '1');
+						per10 = per10.replace('b', '0');
+						per10 = per10.replace('c', '0');
+						per10 = per10.replace('e', '0');
+						per10 = per10.replace('f', a.charAt(0));
+						per10 = per10.replace('g', a.charAt(1));
+						per10 = per10.replace('i', '1');
+						per10 = per10.replace('j', '0');
+						per10 = per10.replace('k', '0');
+					}
+					case "10":{
+						// minor nibble is third nibble
+						per10 = per10.replace('a', '0');
+						per10 = per10.replace('b', a.charAt(0));
+						per10 = per10.replace('c', a.charAt(1));
+						per10 = per10.replace('e', '1');
+						per10 = per10.replace('f', '0');
+						per10 = per10.replace('g', '0');
+						per10 = per10.replace('i', '1');
+						per10 = per10.replace('j', '0');
+						per10 = per10.replace('k', '0');
+					}
+					case "11":{
+						// all major
+						per10 = per10.replace('a', '1');
+						per10 = per10.replace('b', '0');
+						per10 = per10.replace('c', '0');
+						per10 = per10.replace('e', '1');
+						per10 = per10.replace('f', '0');
+						per10 = per10.replace('g', '0');
+						per10 = per10.replace('i', '1');
+						per10 = per10.replace('j', '0');
+						per10 = per10.replace('k', '0');
+					}
+					}
+				} else {
+					// only one major nibble, get location of major nibble
+					switch(String.valueOf(a.charAt(7)) + String.valueOf(a.charAt(8))){
+					case "00":{
+						// major nibble is first nibble
+						per10 = per10.replace('a', '0');
+						per10 = per10.replace('b', a.charAt(0));
+						per10 = per10.replace('c', a.charAt(1));
+						per10 = per10.replace('e', '0');
+						per10 = per10.replace('f', a.charAt(3));
+						per10 = per10.replace('g', a.charAt(4));
+						per10 = per10.replace('i', '1');
+						per10 = per10.replace('j', '0');
+						per10 = per10.replace('k', '0');
+					}
+					case "01":{
+						// major nibble is second nibble
+						per10 = per10.replace('a', '0');
+						per10 = per10.replace('b', a.charAt(0));
+						per10 = per10.replace('c', a.charAt(1));
+						per10 = per10.replace('e', '1');
+						per10 = per10.replace('f', '0');
+						per10 = per10.replace('g', '0');
+						per10 = per10.replace('i', '0');
+						per10 = per10.replace('j', a.charAt(3));
+						per10 = per10.replace('k', a.charAt(4));
+					}
+					case "10":{
+						// major nibble is third nibble
+						per10 = per10.replace('a', '1');
+						per10 = per10.replace('b', '0');
+						per10 = per10.replace('c', '0');
+						per10 = per10.replace('e', '0');
+						per10 = per10.replace('f', a.charAt(3));
+						per10 = per10.replace('g', a.charAt(4));
+						per10 = per10.replace('i', '0');
+						per10 = per10.replace('j', a.charAt(0));
+						per10 = per10.replace('k', a.charAt(1));
+					}
+					}
 				}
 			} else {
-				// only one major nibble, get location of major nibble
-				switch(String.valueOf(a.charAt(7)) + String.valueOf(a.charAt(8))){
-				case "00":{
-					// major nibble is first nibble
-					ans = ans.replace('a', '0');
-					ans = ans.replace('b', a.charAt(0));
-					ans = ans.replace('c', a.charAt(1));
-					ans = ans.replace('e', '0');
-					ans = ans.replace('f', a.charAt(3));
-					ans = ans.replace('g', a.charAt(4));
-					ans = ans.replace('i', '1');
-					ans = ans.replace('j', '0');
-					ans = ans.replace('k', '0');
-					return ans;
-				}
-				case "01":{
-					// major nibble is second nibble
-					ans = ans.replace('a', '0');
-					ans = ans.replace('b', a.charAt(0));
-					ans = ans.replace('c', a.charAt(1));
-					ans = ans.replace('e', '1');
-					ans = ans.replace('f', '0');
-					ans = ans.replace('g', '0');
-					ans = ans.replace('i', '0');
-					ans = ans.replace('j', a.charAt(3));
-					ans = ans.replace('k', a.charAt(4));
-					return ans;
-				}
-				case "10":{
-					// major nibble is third nibble
-					ans = ans.replace('a', '1');
-					ans = ans.replace('b', '0');
-					ans = ans.replace('c', '0');
-					ans = ans.replace('e', '0');
-					ans = ans.replace('f', a.charAt(3));
-					ans = ans.replace('g', a.charAt(4));
-					ans = ans.replace('i', '0');
-					ans = ans.replace('j', a.charAt(0));
-					ans = ans.replace('k', a.charAt(1));
-					return ans;
-				}
-				default: {
-					System.out.println("ONLY ONE MAJOR NIBBLE ERROR");
-					return null;
-				}
-				}
+				// no major nibbles, copy all
+				per10 = per10.replace('a', '0');
+				per10 = per10.replace('b', a.charAt(0));
+				per10 = per10.replace('c', a.charAt(1));
+				per10 = per10.replace('e', '0');
+				per10 = per10.replace('f', a.charAt(3));
+				per10 = per10.replace('g', a.charAt(4));
+				per10 = per10.replace('i', '0');
+				per10 = per10.replace('j', a.charAt(7));
+				per10 = per10.replace('k', a.charAt(8));
 			}
-		} else {
-			// no major nibbles, copy all
-			ans = ans.replace('a', '0');
-			ans = ans.replace('b', a.charAt(0));
-			ans = ans.replace('c', a.charAt(1));
-			ans = ans.replace('e', '0');
-			ans = ans.replace('f', a.charAt(3));
-			ans = ans.replace('g', a.charAt(4));
-			ans = ans.replace('i', '0');
-			ans = ans.replace('j', a.charAt(6));
-			ans = ans.replace('k', a.charAt(7));
-			return ans;
+			ans = ans + per10;
+			offset += 10;
 		}
+		return ans;
 	}
 	
 	public String packedBCDToDecimal(String a) {
