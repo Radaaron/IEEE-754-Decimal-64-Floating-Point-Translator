@@ -31,6 +31,12 @@ public class Converter {
 		case 'D': return "1101";
 		case 'E': return "1110";
 		case 'F': return "1111";
+		case 'a': return "1010";
+		case 'b': return "1011";
+		case 'c': return "1100";
+		case 'd': return "1101";
+		case 'e': return "1110";
+		case 'f': return "1111";
 		default: return null;
 		}
 	}
@@ -179,9 +185,14 @@ public class Converter {
 	}
 	
 	public String packedBCDToDecimal(String a) {
+		// check if it is packed BCD
+		if(a.length() % 4 != 0) {
+			return null;
+		}
 		int offset = 0;
 		String ans = "", temp = "";
-		for(int i = 0; i < 3; i++) {
+		for(int i = 0; i < (a.length() / 4); i++) {
+			// per 4 bits
 			temp = (String.valueOf(a.charAt(offset)) + String.valueOf(a.charAt(offset + 1)) + String.valueOf(a.charAt(offset + 2)) + String.valueOf(a.charAt(offset + 3)));
 			ans = ans.concat(Integer.toString(this.binaryToDecimal(temp)));
 			offset += 4;
