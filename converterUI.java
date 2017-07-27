@@ -26,7 +26,7 @@ public class converterUI extends JFrame implements ActionListener {
             //program check
             System.out.println("Running");
             
-            this.setTitle("IEEE 756 Decimal-64 floating point translator");
+            this.setTitle("IEEE 754 Decimal-64 floating point translator");
             this.setSize(600,150);
             this.setResizable(false);
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,25 +67,29 @@ public class converterUI extends JFrame implements ActionListener {
         
 	@Override 
         public void actionPerformed(ActionEvent e) {	
+            Converter converter = new Converter();
+	    Translator translator = new Translator();
+            
 			if(e.getSource() == convert);
                         {
                             toConvert = inputBox.getText();
-                            System.out.println(toConvert);
-                            System.out.println("Converted");
+                            converted=translator.translate(toConvert);
                             
-                            System.out.println(toConvert);
-                            outputBox.setText(converted.concat(toConvert));
+                            //output checker to cmd line
+                            System.out.println("converted to ieee:"+converted);
+                            //ouput gui
+                            outputBox.setText(converted);
                         }
         	
         }
  
-        /**pwede mag lagay ng history make output panel grid into 1,2
-         * create new panels for each
-         * make labels
-         * make text areas that are editable-false
-         * output to each 
-         */
-       
 }
 
+/**
+ * Cases
+ * FFFFFFFFFFFFFFFF = NaN
+ * 78FFFFFFFFFFFFFF = +infinity
+ * F8FFFFFFFFFFFFFF = -infinity
+ * 2220000000000025 = +0000000000000025x10^-6
+ */
 
